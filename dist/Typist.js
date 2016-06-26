@@ -157,6 +157,11 @@ module.exports =
 	        this.onTypingDone();
 	      }
 	    }
+		}, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      utils.clearRndTimeout();
+	    }
 	  }, {
 	    key: 'shouldComponentUpdate',
 	    value: function shouldComponentUpdate(nextProps, nextState) {
@@ -336,6 +341,7 @@ module.exports =
 	exports.gaussianRnd = gaussianRnd;
 	exports.asyncEach = asyncEach;
 	exports.eachRndTimeout = eachRndTimeout;
+	exports.clearRndTimeout = clearRndTimeout;
 	exports.exclude = exclude;
 	exports.extractText = extractText;
 	exports.elementFactoryMaker = elementFactoryMaker;
@@ -374,10 +380,21 @@ module.exports =
 	  adv();
 	}
 
+  var timers = [];
+	function clearRndTimeout() {
+    console.log(timers.length);
+    timers.forEach(clearTimeout);
+  }
 	function eachRndTimeout(arr, callback, onDone, rndFn) {
 	  asyncEach(arr, function (el, adv, idx) {
 	    callback(el, function () {
-	      setTimeout(adv, rndFn(el, idx));
+        var timer;
+	      timer = setTimeout(function() {
+          var index = timers.indexOf(timer);
+          timers.splice(index, 1);
+          adv();
+        }, rndFn(el, idx));
+        timers.push(timer);
 	    });
 	  }, onDone);
 	}
