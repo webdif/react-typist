@@ -382,7 +382,6 @@ module.exports =
 
   var timers = [];
 	function clearRndTimeout() {
-    console.log(timers.length);
     timers.forEach(clearTimeout);
   }
 	function eachRndTimeout(arr, callback, onDone, rndFn) {
